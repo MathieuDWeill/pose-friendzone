@@ -130,7 +130,6 @@ let state: PublicGameState = {
   secondsLeft: ROUND_SECONDS,
   matched: 0,
   targetCount: 0,
-      liveVouches: 0,
   success: false,
   sessionWins: 0,
   sessionVouches: 0,
@@ -150,7 +149,7 @@ function createBox(
   const entity = engine.addEntity()
   Transform.create(entity, { position, scale })
   MeshRenderer.setBox(entity)
-  Material.setPbr(entity, {
+  Material.setPbrMaterial(entity, {
     albedoColor: color,
     emissiveColor: emissive ?? Color3.create(color.r, color.g, color.b),
     emissiveIntensity: 0.2,
@@ -207,7 +206,7 @@ function ensureTargetEntities(count: number) {
       scale: Vector3.create(1.7, 0.05, 1.7)
     })
     MeshRenderer.setCylinder(entity, 0.5, 0.5)
-    Material.setPbr(entity, {
+    Material.setPbrMaterial(entity, {
       albedoColor: Color4.create(0.08, 0.45, 1, 0.9),
       emissiveColor: Color3.create(0.05, 0.5, 1),
       emissiveIntensity: 2.4,
@@ -233,7 +232,7 @@ function updateTargets(targets: Vec2[], matchedTargets: Set<number>, visible = t
   targets.forEach((target, index) => {
     Transform.getMutable(targetEntities[index]).position = Vector3.create(target.x, 0.07, target.z)
     const matched = matchedTargets.has(index)
-    Material.setPbr(targetEntities[index], {
+    Material.setPbrMaterial(targetEntities[index], {
       albedoColor: matched ? Color4.create(0.15, 1, 0.45, 0.95) : Color4.create(0.08, 0.45, 1, 0.9),
       emissiveColor: matched ? Color3.create(0.08, 1, 0.4) : Color3.create(0.05, 0.5, 1),
       emissiveIntensity: matched ? 4.2 : 2.4,
