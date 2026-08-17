@@ -1,0 +1,27 @@
+{
+  "name": "pose-decentraland-friendzone",
+  "version": "0.3.0",
+  "private": true,
+  "description": "POSE \u00d7 Vouch \u2014 Humans are the puzzle. Play together, then vouch for the teammate you'd choose again.",
+  "scripts": {
+    "start": "sdk-commands start",
+    "build": "sdk-commands build",
+    "deploy": "sdk-commands deploy",
+    "upgrade-sdk": "npm install --save-dev @dcl/sdk@latest",
+    "upgrade-sdk:next": "npm install --save-dev @dcl/sdk@next",
+    "verify": "node scripts/verify-project.mjs"
+  },
+  "devDependencies": {
+    "@dcl/js-runtime": "latest",
+    "@dcl/sdk": "latest"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 120,
+    "trailingComma": "none"
+  }
+}

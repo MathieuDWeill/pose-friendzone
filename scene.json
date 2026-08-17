@@ -1,0 +1,40 @@
+{
+  "ecs7": true,
+  "runtimeVersion": "7",
+  "display": {
+    "title": "POSE — Humans are the puzzle",
+    "description": "Two to eight humans. One formation. Move together before time runs out. Built mobile-first for Decentraland Friendzone.",
+    "navmapThumbnail": "images/scene-thumbnail.png"
+  },
+  "owner": "",
+  "contact": {
+    "name": "MathieuDWeill",
+    "email": ""
+  },
+  "main": "bin/index.js",
+  "tags": ["game", "social"],
+  "scene": {
+    "parcels": ["0,0"],
+    "base": "0,0"
+  },
+  "spawnPoints": [
+    {
+      "name": "POSE Arena",
+      "default": true,
+      "position": {
+        "x": [7, 9],
+        "y": [0, 0],
+        "z": [1, 2]
+      },
+      "cameraTarget": {
+        "x": 8,
+        "y": 1,
+        "z": 8
+      }
+    }
+  ],
+  "featureToggles": {
+    "voiceChat": "enabled",
+    "portableExperiences": "enabled"
+  }
+}
