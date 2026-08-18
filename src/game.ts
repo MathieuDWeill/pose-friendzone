@@ -15,6 +15,7 @@ export type GamePhase = 'training' | 'waiting' | 'countdown' | 'active' | 'vouch
 
 type Formation = {
   id: string
+  theme: string
   title: string
   subtitle: string
   normalizedTargets: Vec2[]
@@ -52,6 +53,7 @@ const TARGET_RADIUS = 1.2
 const formations: Formation[] = [
   {
     id: 'line',
+    theme: 'POWER',
     title: 'MAKE A LINE',
     subtitle: 'One human on every light',
     normalizedTargets: [
@@ -61,6 +63,7 @@ const formations: Formation[] = [
   },
   {
     id: 'circle',
+    theme: 'VOYAGE',
     title: 'MAKE A CIRCLE',
     subtitle: 'Spread around the ring',
     normalizedTargets: [
@@ -70,6 +73,7 @@ const formations: Formation[] = [
   },
   {
     id: 'diamond',
+    theme: 'SHADOW',
     title: 'MAKE A DIAMOND',
     subtitle: 'Find your corner',
     normalizedTargets: [
@@ -79,6 +83,7 @@ const formations: Formation[] = [
   },
   {
     id: 'zigzag',
+    theme: 'MECHA',
     title: 'MAKE A ZIGZAG',
     subtitle: 'Alternate left and right',
     normalizedTargets: [
@@ -88,6 +93,7 @@ const formations: Formation[] = [
   },
   {
     id: 'heart',
+    theme: 'MAGIC',
     title: 'MAKE A HEART',
     subtitle: 'Friendzone finale',
     normalizedTargets: [
@@ -97,6 +103,7 @@ const formations: Formation[] = [
   },
   {
     id: 'arrow',
+    theme: 'SPIRIT',
     title: 'MAKE AN ARROW',
     subtitle: 'Point together',
     normalizedTargets: [
@@ -107,6 +114,7 @@ const formations: Formation[] = [
 ]
 
 const targetEntities: Entity[] = []
+const successBurstEntities: Entity[] = []
 let titleEntity: Entity | undefined
 let subtitleEntity: Entity | undefined
 let lastRoundKey = -1
@@ -240,6 +248,17 @@ function createArena() {
   createBox({ x: 14.90, y: 0.40, z: 12.20 }, { x: 0.75, y: 0.10, z: 0.18 }, indigo, Color3.create(0.35, 0.22, 0.75))
   createBox({ x: 14.90, y: 0.15, z: 12.20 }, { x: 0.18, y: 0.42, z: 0.18 }, Color4.create(0.12, 0.10, 0.16, 1))
 
+  for (const [x, z, color, emissive] of [
+    [8, 5.25, cyan, Color3.create(0.08, 0.78, 1)],
+    [10.75, 8, pink, Color3.create(1, 0.18, 0.62)],
+    [8, 10.75, violet, Color3.create(0.62, 0.22, 1)],
+    [5.25, 8, gold, Color3.create(1, 0.78, 0.12)]
+  ] as const) {
+    const burst = createBox({ x, y: 1.10, z }, { x: 0.16, y: 2.2, z: 0.16 }, color, emissive)
+    Transform.getMutable(burst).scale = Vector3.create(0, 0, 0)
+    successBurstEntities.push(burst)
+  }
+
   titleEntity = engine.addEntity()
   Transform.create(titleEntity, {
     position: Vector3.create(8, 4.60, 15.00),
@@ -289,6 +308,12 @@ function ensureTargetEntities(count: number) {
   for (let i = 0; i < targetEntities.length; i++) {
     Transform.getMutable(targetEntities[i]).scale =
       i < count ? Vector3.create(2.0, 0.06, 2.0) : Vector3.create(0, 0, 0)
+  }
+}
+
+function setSuccessBurst(visible: boolean) {
+  for (const entity of successBurstEntities) {
+    Transform.getMutable(entity).scale = visible ? Vector3.create(0.16, 2.2, 0.16) : Vector3.create(0, 0, 0)
   }
 }
 
@@ -380,7 +405,9 @@ function gameSystem() {
   const roundKey = Math.floor(nowSec / ROUND_SECONDS)
   const secondsIntoRound = nowSec - roundKey * ROUND_SECONDS
   const secondsLeft = Math.max(0, Math.ceil(ROUND_SECONDS - secondsIntoRound))
-  const allPlayers = playersInsideArena(getPlayers())
+  const detectedPlayers = getPlayers()
+  const arenaPlayers = playersInsideArena(detectedPlayers)
+  const allPlayers = arenaPlayers.length === 0 && detectedPlayers.length === 1 ? detectedPlayers : arenaPlayers
   const playerCount = allPlayers.length
   const activePlayers = Math.min(playerCount, MAX_ACTIVE_PLAYERS)
   const spectatorCount = Math.max(0, playerCount - activePlayers)
@@ -389,6 +416,7 @@ function gameSystem() {
     lastRoundKey = roundKey
     successSince = 0
     roundCompletedAt = 0
+    setSuccessBurst(false)
   }
 
   // Solo rehearsal: judges can understand and test the core movement without faking multiplayer.
@@ -396,7 +424,7 @@ function gameSystem() {
     const trainingTargets: Vec2[] = [{ x: ARENA_CENTER.x, z: ARENA_CENTER.z }]
     const matched = matchPlayersToTargets(allPlayers, trainingTargets, TARGET_RADIUS)
     updateTargets(trainingTargets, matched)
-    updateWorldSign(matched.size === 1 ? 'NICE.' : 'WARM UP', matched.size === 1 ? 'BRING ONE HUMAN TO UNLOCK POSE' : 'STAND ON THE GLOWING LIGHT')
+    updateWorldSign(matched.size === 1 ? 'NICE.' : 'SOLO MODE', matched.size === 1 ? 'BRING ONE HUMAN TO UNLOCK THE REAL GAME' : 'ENTER THE RING · STAND ON THE LIGHT')
     setState({
       phase: 'training',
       playerCount,
@@ -404,8 +432,8 @@ function gameSystem() {
       spectatorCount: 0,
       requiredPlayers: MIN_SOCIAL_PLAYERS,
       round: roundKey,
-      title: matched.size === 1 ? 'NICE.' : 'WARM UP',
-      subtitle: matched.size === 1 ? 'Now bring one person' : 'Stand on the glowing light',
+      title: matched.size === 1 ? 'NICE.' : 'SOLO MODE',
+      subtitle: matched.size === 1 ? 'Now bring one person' : 'Enter the ring · stand on the glowing light',
       secondsLeft,
       matched: matched.size,
       targetCount: 1,
@@ -446,6 +474,7 @@ function gameSystem() {
     const outgoing = calculateVouches(active)
 
     if (vouching) {
+      setSuccessBurst(false)
       ensureTargetEntities(0)
       const remaining = Math.max(1, Math.ceil(VOUCH_WINDOW_SECONDS - elapsedSinceSolve))
       updateWorldSign('VOUCH', 'STAND BY THE TEAMMATE YOU WOULD PLAY WITH AGAIN')
@@ -518,6 +547,7 @@ function gameSystem() {
       lastSuccessRound = roundKey
       roundCompletedAt = nowSec
       sessionWins += 1
+      setSuccessBurst(true)
     }
   } else {
     successSince = 0

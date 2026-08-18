@@ -16,13 +16,13 @@ function phaseHint() {
     case 'waiting':
       return 'Bring one person into the arena.'
     case 'training':
-      return 'WARM UP · Bring one human to unlock the real puzzle.'
+      return 'SOLO MODE · Enter the ring, step on the light, then bring one human.'
     case 'countdown':
       return 'Get ready. The lights are about to appear.'
     case 'vouch':
-      return 'VOUCH · Stand beside the teammate you would choose again.'
+      return 'VOUCH ROUND · Stand beside the teammate you would choose again.'
     case 'success':
-      return 'VOUCHED ✓ · Trust signal captured. Next pose incoming.'
+      return 'SYNC COMPLETE ✓ · Trust captured. Next anime round incoming.'
     default:
       return 'Move onto the glowing pads. One human per light.'
   }
