@@ -14,13 +14,13 @@ function phaseHint() {
     case 'waiting':
       return 'Bring one person into the arena.'
     case 'training':
-      return 'Solo rehearsal only — the real puzzle starts with 2 humans.'
+      return 'WARM UP · Bring one human to unlock the real puzzle.'
     case 'countdown':
       return 'Get ready. The lights are about to appear.'
     case 'vouch':
-      return 'VOUCH = recommend a teammate. Stand beside the person you would play with again.'
+      return 'VOUCH · Stand beside the teammate you would choose again.'
     case 'success':
-      return 'Vouch recorded for this session. Next pose incoming.'
+      return 'VOUCHED ✓ · Trust signal captured. Next pose incoming.'
     default:
       return 'Move onto the glowing pads. One human per light.'
   }
@@ -73,7 +73,7 @@ function Hud() {
           textAlign="middle-center"
         />
         <Label
-          value={`SESSION WINS ${s.sessionWins}   ·   VOUCHES ${s.sessionVouches}${vouchLine}`}
+          value={`SOLVES ${s.sessionWins}   ·   VOUCHES ${s.sessionVouches}${vouchLine}`}
           color={BLUE}
           fontSize={13}
           uiTransform={{ width: '100%', height: 22 }}

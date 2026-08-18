@@ -130,10 +130,10 @@ let state: PublicGameState = {
   secondsLeft: ROUND_SECONDS,
   matched: 0,
   targetCount: 0,
+      liveVouches: 0,
   success: false,
   sessionWins: 0,
   sessionVouches: 0,
-  liveVouches: 0
 }
 
 export function getGameState(): PublicGameState {
@@ -377,7 +377,7 @@ function gameSystem() {
     if (vouching) {
       ensureTargetEntities(0)
       const remaining = Math.max(1, Math.ceil(VOUCH_WINDOW_SECONDS - elapsedSinceSolve))
-      updateWorldSign('VOUCH', 'STAND BESIDE THE TEAMMATE YOU RECOMMEND')
+      updateWorldSign('VOUCH', 'STAND BY THE TEAMMATE YOU WOULD PLAY WITH AGAIN')
       setState({
         phase: 'vouch',
         playerCount,
@@ -396,7 +396,7 @@ function gameSystem() {
     } else {
       commitVouches(roundKey, outgoing)
       updateTargets(targets, new Set(targets.map((_, i) => i)))
-      updateWorldSign('VOUCHED.', `${outgoing.size} RECOMMENDATION${outgoing.size === 1 ? '' : 'S'}`)
+      updateWorldSign('VOUCHED ✓', `${outgoing.size} TRUST SIGNAL${outgoing.size === 1 ? '' : 'S'}`)
       setState({
         phase: 'success',
         playerCount,

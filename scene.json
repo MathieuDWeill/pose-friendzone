@@ -2,8 +2,8 @@
   "ecs7": true,
   "runtimeVersion": "7",
   "display": {
-    "title": "POSE — Humans are the puzzle",
-    "description": "Two to eight humans. One formation. Move together before time runs out. Built mobile-first for Decentraland Friendzone.",
+    "title": "POSE \u00d7 Vouch \u2014 Humans are the puzzle",
+    "description": "Move together. Solve the pose. Then vouch for the teammate you'd choose again.",
     "navmapThumbnail": "images/scene-thumbnail.png"
   },
   "owner": "",
@@ -12,9 +12,14 @@
     "email": ""
   },
   "main": "bin/index.js",
-  "tags": ["game", "social"],
+  "tags": [
+    "game",
+    "social"
+  ],
   "scene": {
-    "parcels": ["0,0"],
+    "parcels": [
+      "0,0"
+    ],
     "base": "0,0"
   },
   "spawnPoints": [
@@ -22,9 +27,18 @@
       "name": "POSE Arena",
       "default": true,
       "position": {
-        "x": [7, 9],
-        "y": [0, 0],
-        "z": [1, 2]
+        "x": [
+          7,
+          9
+        ],
+        "y": [
+          0,
+          0
+        ],
+        "z": [
+          1,
+          2
+        ]
       },
       "cameraTarget": {
         "x": 8,

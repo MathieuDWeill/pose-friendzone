@@ -1,8 +1,8 @@
 {
   "name": "pose-decentraland-friendzone",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "POSE \u00d7 Vouch \u2014 Humans are the puzzle. Play together, then vouch for the teammate you'd choose again.",
+  "description": "POSE \u00d7 Vouch \u2014 mobile-first social puzzle for Decentraland Friendzone. Humans are the puzzle.",
   "scripts": {
     "start": "sdk-commands start",
     "build": "sdk-commands build",
