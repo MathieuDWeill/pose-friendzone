@@ -196,6 +196,50 @@ function createArena() {
   createBox({ x: 8, y: 5.52, z: 15.10 }, { x: 10.4, y: 0.06, z: 0.10 }, cyan, Color3.create(0.08, 0.78, 1))
   createBox({ x: 8, y: 2.98, z: 15.10 }, { x: 10.4, y: 0.06, z: 0.10 }, pink, Color3.create(1, 0.18, 0.62))
 
+  // ANIME TRIBUTE RING
+  // Original geometric easter eggs inspired by broad anime archetypes.
+  // No licensed characters, logos, names, or copied assets.
+
+  const orange = Color4.create(1.0, 0.42, 0.06, 1)
+  const gold = Color4.create(1.0, 0.78, 0.12, 1)
+  const crimson = Color4.create(0.92, 0.08, 0.16, 1)
+  const indigo = Color4.create(0.24, 0.16, 0.62, 1)
+  const aqua = Color4.create(0.10, 0.92, 0.95, 1)
+  const magenta = Color4.create(1.0, 0.16, 0.70, 1)
+  const whiteGlow = Color3.create(0.95, 0.98, 1.0)
+
+  // POWER shrine — orange/gold energy archetype.
+  createBox({ x: 1.10, y: 1.00, z: 4.00 }, { x: 0.22, y: 2.00, z: 0.22 }, orange, Color3.create(1, 0.35, 0.04))
+  createBox({ x: 1.10, y: 1.90, z: 4.00 }, { x: 1.10, y: 0.12, z: 0.12 }, gold, Color3.create(1, 0.75, 0.08))
+  createBox({ x: 1.10, y: 1.45, z: 4.00 }, { x: 0.62, y: 0.10, z: 0.62 }, gold, Color3.create(1, 0.75, 0.08))
+
+  // VOYAGE shrine — mast/compass archetype.
+  createBox({ x: 14.90, y: 1.05, z: 4.00 }, { x: 0.18, y: 2.10, z: 0.18 }, Color4.create(0.40, 0.19, 0.08, 1))
+  createBox({ x: 14.90, y: 1.55, z: 4.00 }, { x: 1.00, y: 0.10, z: 0.10 }, gold, Color3.create(1, 0.72, 0.08))
+  createBox({ x: 14.90, y: 1.55, z: 4.00 }, { x: 0.10, y: 0.10, z: 1.00 }, gold, Color3.create(1, 0.72, 0.08))
+
+  // SHADOW gate — shinobi/torii archetype.
+  createBox({ x: 1.05, y: 0.95, z: 8.00 }, { x: 0.18, y: 1.90, z: 0.18 }, crimson, Color3.create(0.90, 0.05, 0.10))
+  createBox({ x: 2.05, y: 0.95, z: 8.00 }, { x: 0.18, y: 1.90, z: 0.18 }, crimson, Color3.create(0.90, 0.05, 0.10))
+  createBox({ x: 1.55, y: 1.86, z: 8.00 }, { x: 1.42, y: 0.14, z: 0.28 }, crimson, Color3.create(0.90, 0.05, 0.10))
+  createBox({ x: 1.55, y: 1.52, z: 8.00 }, { x: 1.05, y: 0.10, z: 0.20 }, indigo, Color3.create(0.20, 0.10, 0.55))
+
+  // MECHA core — angular neon machinery archetype.
+  createBox({ x: 14.90, y: 0.95, z: 8.00 }, { x: 0.85, y: 1.90, z: 0.18 }, Color4.create(0.12, 0.16, 0.22, 1))
+  createBox({ x: 14.90, y: 1.05, z: 7.88 }, { x: 0.36, y: 0.36, z: 0.08 }, aqua, Color3.create(0.05, 0.95, 1))
+  createBox({ x: 14.42, y: 1.22, z: 8.00 }, { x: 0.18, y: 0.72, z: 0.18 }, aqua, Color3.create(0.05, 0.95, 1))
+  createBox({ x: 15.38, y: 1.22, z: 8.00 }, { x: 0.18, y: 0.72, z: 0.18 }, aqua, Color3.create(0.05, 0.95, 1))
+
+  // MAGIC sigil — pink star/wand archetype.
+  createBox({ x: 1.15, y: 0.08, z: 12.15 }, { x: 1.30, y: 0.04, z: 0.10 }, magenta, Color3.create(1, 0.10, 0.68))
+  createBox({ x: 1.15, y: 0.08, z: 12.15 }, { x: 0.10, y: 0.04, z: 1.30 }, magenta, Color3.create(1, 0.10, 0.68))
+  createBox({ x: 1.15, y: 0.12, z: 12.15 }, { x: 0.62, y: 0.04, z: 0.62 }, Color4.create(1, 0.72, 0.92, 1), Color3.create(1, 0.55, 0.88))
+
+  // SPIRIT blade — luminous sword archetype.
+  createBox({ x: 14.90, y: 1.05, z: 12.20 }, { x: 0.10, y: 1.65, z: 0.20 }, Color4.create(0.78, 0.95, 1, 1), whiteGlow)
+  createBox({ x: 14.90, y: 0.40, z: 12.20 }, { x: 0.75, y: 0.10, z: 0.18 }, indigo, Color3.create(0.35, 0.22, 0.75))
+  createBox({ x: 14.90, y: 0.15, z: 12.20 }, { x: 0.18, y: 0.42, z: 0.18 }, Color4.create(0.12, 0.10, 0.16, 1))
+
   titleEntity = engine.addEntity()
   Transform.create(titleEntity, {
     position: Vector3.create(8, 4.60, 15.00),
