@@ -5,7 +5,9 @@ import { getGameState } from './game'
 const WHITE = Color4.create(1, 1, 1, 1)
 const MUTED = Color4.create(0.72, 0.77, 0.88, 1)
 const GREEN = Color4.create(0.25, 1, 0.52, 1)
-const BLUE = Color4.create(0.32, 0.68, 1, 1)
+const BLUE = Color4.create(0.24, 0.78, 1, 1)
+const PINK = Color4.create(1, 0.25, 0.66, 1)
+const VIOLET = Color4.create(0.68, 0.36, 1, 1)
 const PANEL = Color4.create(0.015, 0.02, 0.04, 0.9)
 
 function phaseHint() {
@@ -33,28 +35,29 @@ function Hud() {
   const playerLine = s.spectatorCount > 0
     ? `${s.activePlayers} playing · ${s.spectatorCount} watching`
     : `${s.activePlayers || s.playerCount} player${(s.activePlayers || s.playerCount) === 1 ? '' : 's'}`
+  const accent = s.phase === 'vouch' ? PINK : s.phase === 'success' ? GREEN : s.phase === 'countdown' ? VIOLET : BLUE
 
   return (
     <UiEntity uiTransform={{ width: '100%', height: '100%', positionType: 'absolute', pointerFilter: 'none' }}>
       <UiEntity
         uiTransform={{
-          width: 560,
-          height: 154,
+          width: 470,
+          height: 136,
           positionType: 'absolute',
-          position: { top: 38, left: 56 },
+          position: { top: 24, left: 24 },
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: 16,
+          padding: 12,
           borderWidth: 2,
-          borderColor: s.success ? GREEN : BLUE
+          borderColor: accent
         }}
         uiBackground={{ color: PANEL }}
       >
         <Label
           value={s.title}
-          color={s.success ? GREEN : WHITE}
-          fontSize={30}
+          color={accent}
+          fontSize={27}
           uiTransform={{ width: '100%', height: 42 }}
           textAlign="middle-center"
         />
@@ -74,7 +77,7 @@ function Hud() {
         />
         <Label
           value={`SOLVES ${s.sessionWins}   ·   VOUCHES ${s.sessionVouches}${vouchLine}`}
-          color={BLUE}
+          color={accent}
           fontSize={13}
           uiTransform={{ width: '100%', height: 22 }}
           textAlign="middle-center"
@@ -83,10 +86,10 @@ function Hud() {
 
       <UiEntity
         uiTransform={{
-          width: 760,
-          height: 48,
+          width: 620,
+          height: 42,
           positionType: 'absolute',
-          position: { bottom: 52, left: 56 },
+          position: { bottom: 34, left: 24 },
           justifyContent: 'center',
           alignItems: 'center',
           padding: 8

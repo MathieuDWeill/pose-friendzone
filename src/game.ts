@@ -169,14 +169,41 @@ function createArena() {
   createBox({ x: 0.35, y: 0.20, z: 8 }, { x: 0.22, y: 0.38, z: 15.4 }, border)
   createBox({ x: 15.65, y: 0.20, z: 8 }, { x: 0.22, y: 0.38, z: 15.4 }, border)
 
+  // Competition polish: lightweight neon stage, still primitive-only for mobile.
+  const cyan = Color4.create(0.08, 0.78, 1, 1)
+  const violet = Color4.create(0.62, 0.22, 1, 1)
+  const pink = Color4.create(1, 0.18, 0.62, 1)
+  const panel = Color4.create(0.02, 0.025, 0.055, 0.98)
+
+  createBox({ x: 8, y: 0.09, z: 2.15 }, { x: 11.7, y: 0.05, z: 0.08 }, cyan, Color3.create(0.08, 0.78, 1))
+  createBox({ x: 8, y: 0.09, z: 13.85 }, { x: 11.7, y: 0.05, z: 0.08 }, violet, Color3.create(0.62, 0.22, 1))
+  createBox({ x: 2.15, y: 0.09, z: 8 }, { x: 0.08, y: 0.05, z: 11.7 }, pink, Color3.create(1, 0.18, 0.62))
+  createBox({ x: 13.85, y: 0.09, z: 8 }, { x: 0.08, y: 0.05, z: 11.7 }, cyan, Color3.create(0.08, 0.78, 1))
+
+  for (const x of [4, 6, 8, 10, 12]) {
+    createBox({ x, y: 0.045, z: 8 }, { x: 0.025, y: 0.018, z: 10.4 }, Color4.create(0.10, 0.16, 0.26, 0.55))
+  }
+  for (const z of [4, 6, 8, 10, 12]) {
+    createBox({ x: 8, y: 0.046, z }, { x: 10.4, y: 0.018, z: 0.025 }, Color4.create(0.10, 0.16, 0.26, 0.55))
+  }
+
+  createBox({ x: 2.15, y: 0.75, z: 2.15 }, { x: 0.20, y: 1.45, z: 0.20 }, cyan, Color3.create(0.08, 0.78, 1))
+  createBox({ x: 13.85, y: 0.75, z: 2.15 }, { x: 0.20, y: 1.45, z: 0.20 }, violet, Color3.create(0.62, 0.22, 1))
+  createBox({ x: 2.15, y: 0.75, z: 13.85 }, { x: 0.20, y: 1.45, z: 0.20 }, pink, Color3.create(1, 0.18, 0.62))
+  createBox({ x: 13.85, y: 0.75, z: 13.85 }, { x: 0.20, y: 1.45, z: 0.20 }, cyan, Color3.create(0.08, 0.78, 1))
+
+  createBox({ x: 8, y: 4.25, z: 15.18 }, { x: 10.2, y: 2.45, z: 0.14 }, panel)
+  createBox({ x: 8, y: 5.52, z: 15.10 }, { x: 10.4, y: 0.06, z: 0.10 }, cyan, Color3.create(0.08, 0.78, 1))
+  createBox({ x: 8, y: 2.98, z: 15.10 }, { x: 10.4, y: 0.06, z: 0.10 }, pink, Color3.create(1, 0.18, 0.62))
+
   titleEntity = engine.addEntity()
   Transform.create(titleEntity, {
-    position: Vector3.create(8, 4.65, 14.7),
+    position: Vector3.create(8, 4.60, 15.00),
     rotation: Quaternion.fromEulerDegrees(0, 0, 0)
   })
   TextShape.create(titleEntity, {
     text: 'POSE × VOUCH',
-    fontSize: 4,
+    fontSize: 5,
     textColor: Color4.White(),
     outlineColor: Color3.create(0, 0, 0),
     outlineWidth: 0.12
@@ -184,12 +211,12 @@ function createArena() {
 
   subtitleEntity = engine.addEntity()
   Transform.create(subtitleEntity, {
-    position: Vector3.create(8, 3.85, 14.68),
+    position: Vector3.create(8, 3.72, 14.98),
     rotation: Quaternion.fromEulerDegrees(0, 0, 0)
   })
   TextShape.create(subtitleEntity, {
     text: 'HUMANS ARE THE PUZZLE',
-    fontSize: 1.15,
+    fontSize: 1.35,
     textColor: Color4.create(0.55, 0.75, 1, 1)
   })
 
@@ -233,9 +260,9 @@ function updateTargets(targets: Vec2[], matchedTargets: Set<number>, visible = t
     Transform.getMutable(targetEntities[index]).position = Vector3.create(target.x, 0.07, target.z)
     const matched = matchedTargets.has(index)
     Material.setPbrMaterial(targetEntities[index], {
-      albedoColor: matched ? Color4.create(0.15, 1, 0.45, 0.95) : Color4.create(0.08, 0.45, 1, 0.9),
-      emissiveColor: matched ? Color3.create(0.08, 1, 0.4) : Color3.create(0.05, 0.5, 1),
-      emissiveIntensity: matched ? 4.2 : 2.4,
+      albedoColor: matched ? Color4.create(0.18, 1, 0.48, 0.98) : Color4.create(0.12, 0.72, 1, 0.96),
+      emissiveColor: matched ? Color3.create(0.08, 1, 0.4) : Color3.create(0.08, 0.72, 1),
+      emissiveIntensity: matched ? 5.0 : 4.0,
       roughness: 0.3
     })
   })
