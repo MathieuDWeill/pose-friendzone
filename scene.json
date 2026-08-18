@@ -2,7 +2,7 @@
   "ecs7": true,
   "runtimeVersion": "7",
   "display": {
-    "title": "POSE \u00d7 Vouch \u2014 Humans are the puzzle",
+    "title": "POSE × Vouch — Humans are the puzzle",
     "description": "Move together. Solve the pose. Then vouch for the teammate you'd choose again.",
     "navmapThumbnail": "images/scene-thumbnail.png"
   },
@@ -49,6 +49,14 @@
   ],
   "featureToggles": {
     "voiceChat": "enabled",
-    "portableExperiences": "enabled"
+    "portableExperiences": "enabled",
+    "nearbyVoiceChat": "enabled"
+  },
+  "creator": "",
+  "skyboxConfig": {},
+  "landscapeTerrain": true,
+  "source": {
+    "origin": "creator-hub",
+    "projectId": "40cdc890-8be4-4e37-9449-2997628fed1c"
   }
 }

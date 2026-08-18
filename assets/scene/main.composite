@@ -452,8 +452,8 @@
       "data": {
         "0": {
           "json": {
-            "name": "POSE — Humans are the puzzle",
-            "description": "Two to eight humans. One formation. Move together before time runs out. Built mobile-first for Decentraland Friendzone.",
+            "name": "POSE × Vouch — Humans are the puzzle",
+            "description": "Move together. Solve the pose. Then vouch for the teammate you'd choose again.",
             "thumbnail": "images/scene-thumbnail.png",
             "categories": [
               "game",

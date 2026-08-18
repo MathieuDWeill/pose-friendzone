@@ -172,10 +172,10 @@ function createArena() {
   titleEntity = engine.addEntity()
   Transform.create(titleEntity, {
     position: Vector3.create(8, 4.65, 14.7),
-    rotation: Quaternion.fromEulerDegrees(0, 180, 0)
+    rotation: Quaternion.fromEulerDegrees(0, 0, 0)
   })
   TextShape.create(titleEntity, {
-    text: 'POSE',
+    text: 'POSE × VOUCH',
     fontSize: 4,
     textColor: Color4.White(),
     outlineColor: Color3.create(0, 0, 0),
@@ -185,7 +185,7 @@ function createArena() {
   subtitleEntity = engine.addEntity()
   Transform.create(subtitleEntity, {
     position: Vector3.create(8, 3.85, 14.68),
-    rotation: Quaternion.fromEulerDegrees(0, 180, 0)
+    rotation: Quaternion.fromEulerDegrees(0, 0, 0)
   })
   TextShape.create(subtitleEntity, {
     text: 'HUMANS ARE THE PUZZLE',
@@ -203,13 +203,13 @@ function ensureTargetEntities(count: number) {
     const entity = engine.addEntity()
     Transform.create(entity, {
       position: Vector3.create(8, 0.07, 8),
-      scale: Vector3.create(1.7, 0.05, 1.7)
+      scale: Vector3.create(2.0, 0.06, 2.0)
     })
     MeshRenderer.setCylinder(entity, 0.5, 0.5)
     Material.setPbrMaterial(entity, {
-      albedoColor: Color4.create(0.08, 0.45, 1, 0.9),
-      emissiveColor: Color3.create(0.05, 0.5, 1),
-      emissiveIntensity: 2.4,
+      albedoColor: Color4.create(0.12, 0.72, 1, 0.96),
+      emissiveColor: Color3.create(0.08, 0.72, 1),
+      emissiveIntensity: 4.0,
       roughness: 0.3
     })
     targetEntities.push(entity)
@@ -217,7 +217,7 @@ function ensureTargetEntities(count: number) {
 
   for (let i = 0; i < targetEntities.length; i++) {
     Transform.getMutable(targetEntities[i]).scale =
-      i < count ? Vector3.create(1.7, 0.05, 1.7) : Vector3.create(0, 0, 0)
+      i < count ? Vector3.create(2.0, 0.06, 2.0) : Vector3.create(0, 0, 0)
   }
 }
 
@@ -325,7 +325,7 @@ function gameSystem() {
     const trainingTargets: Vec2[] = [{ x: ARENA_CENTER.x, z: ARENA_CENTER.z }]
     const matched = matchPlayersToTargets(allPlayers, trainingTargets, TARGET_RADIUS)
     updateTargets(trainingTargets, matched)
-    updateWorldSign(matched.size === 1 ? 'NICE.' : 'WARM UP', 'BRING A FRIEND FOR THE REAL PUZZLE')
+    updateWorldSign(matched.size === 1 ? 'NICE.' : 'WARM UP', matched.size === 1 ? 'BRING ONE HUMAN TO UNLOCK POSE' : 'STAND ON THE GLOWING LIGHT')
     setState({
       phase: 'training',
       playerCount,

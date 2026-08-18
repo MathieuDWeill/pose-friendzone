@@ -1,8 +1,8 @@
 {
   "name": "pose-decentraland-friendzone",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
-  "description": "POSE \u00d7 Vouch \u2014 mobile-first social puzzle for Decentraland Friendzone. Humans are the puzzle.",
+  "description": "POSE \u00d7 Vouch \u2014 mobile-first social puzzle for Decentraland Friendzone.",
   "scripts": {
     "start": "sdk-commands start",
     "build": "sdk-commands build",
@@ -12,7 +12,7 @@
     "verify": "node scripts/verify-project.mjs"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "latest",
+    "@dcl/js-runtime": "7.26.0",
     "@dcl/sdk": "latest"
   },
   "engines": {
