@@ -50,6 +50,12 @@ const ARENA_CENTER = { x: 8, z: 8 }
 const ARENA_RADIUS = 4.35
 const TARGET_RADIUS = 1.2
 
+// TEST-ONLY. v1.0 production build must set this to false.
+// When one real avatar is present, a visible synthetic teammate lets one judge test
+// the complete 2-player loop in a single Explorer instance.
+const JUDGE_MODE = true
+const JUDGE_GHOST_ID = '__pose_judge_ghost__'
+
 const formations: Formation[] = [
   {
     id: 'line',
@@ -117,6 +123,7 @@ const targetEntities: Entity[] = []
 const successBurstEntities: Entity[] = []
 let titleEntity: Entity | undefined
 let subtitleEntity: Entity | undefined
+let judgeGhostEntity: Entity | undefined
 let lastRoundKey = -1
 let successSince = 0
 let lastSuccessRound = -1
@@ -259,6 +266,20 @@ function createArena() {
     successBurstEntities.push(burst)
   }
 
+  // Judge ghost: a simple visible hologram used only by JUDGE_MODE.
+  judgeGhostEntity = engine.addEntity()
+  Transform.create(judgeGhostEntity, {
+    position: Vector3.create(8, 0.95, 8),
+    scale: Vector3.create(0, 0, 0)
+  })
+  MeshRenderer.setCylinder(judgeGhostEntity, 0.32, 0.46)
+  Material.setPbrMaterial(judgeGhostEntity, {
+    albedoColor: Color4.create(0.30, 0.88, 1, 0.72),
+    emissiveColor: Color3.create(0.10, 0.80, 1),
+    emissiveIntensity: 4.5,
+    roughness: 0.2
+  })
+
   titleEntity = engine.addEntity()
   Transform.create(titleEntity, {
     position: Vector3.create(8, 4.60, 15.00),
@@ -315,6 +336,17 @@ function setSuccessBurst(visible: boolean) {
   for (const entity of successBurstEntities) {
     Transform.getMutable(entity).scale = visible ? Vector3.create(0.16, 2.2, 0.16) : Vector3.create(0, 0, 0)
   }
+}
+
+function setJudgeGhost(target?: Vec2) {
+  if (!judgeGhostEntity) return
+  const transform = Transform.getMutable(judgeGhostEntity)
+  if (!target) {
+    transform.scale = Vector3.create(0, 0, 0)
+    return
+  }
+  transform.position = Vector3.create(target.x, 0.95, target.z)
+  transform.scale = Vector3.create(0.82, 1.75, 0.82)
 }
 
 function worldTargets(formation: Formation, count: number): Vec2[] {
@@ -419,8 +451,115 @@ function gameSystem() {
     setSuccessBurst(false)
   }
 
-  // Solo rehearsal: judges can understand and test the core movement without faking multiplayer.
+  // Single-instance judge mode: simulate exactly one visible teammate.
+  // The real avatar still has to solve its own target; the ghost occupies the other.
+  if (JUDGE_MODE && detectedPlayers.length === 1) {
+    const realPlayer = detectedPlayers[0]
+    const formation = formations[deterministicFormationIndex(roundKey)]
+    const targets = worldTargets(formation, 2)
+
+    // Keep the ghost on target #2; the judge must physically reach target #1.
+    const ghostPoint: PlayerPoint = {
+      id: JUDGE_GHOST_ID,
+      x: targets[1].x,
+      z: targets[1].z
+    }
+    setJudgeGhost(targets[1])
+
+    const judgePlayers = [realPlayer, ghostPoint]
+    const matched = matchPlayersToTargets(judgePlayers, targets, TARGET_RADIUS)
+
+    if (lastSuccessRound === roundKey) {
+      const elapsedSinceSolve = Math.max(0, nowSec - roundCompletedAt)
+      const vouching = elapsedSinceSolve < VOUCH_WINDOW_SECONDS
+
+      if (vouching) {
+        setSuccessBurst(false)
+        ensureTargetEntities(0)
+        const remaining = Math.max(1, Math.ceil(VOUCH_WINDOW_SECONDS - elapsedSinceSolve))
+
+        // Put the hologram near the center during Vouch so the judge can walk beside it.
+        setJudgeGhost({ x: ARENA_CENTER.x + 1.15, z: ARENA_CENTER.z })
+        updateWorldSign('VOUCH TEST', 'STAND BESIDE THE HOLOGRAM')
+
+        const dx = realPlayer.x - (ARENA_CENTER.x + 1.15)
+        const dz = realPlayer.z - ARENA_CENTER.z
+        const closeEnough = dx * dx + dz * dz <= VOUCH_DISTANCE * VOUCH_DISTANCE
+
+        setState({
+          phase: 'vouch',
+          playerCount: 2,
+          activePlayers: 2,
+          spectatorCount: 0,
+          requiredPlayers: MIN_SOCIAL_PLAYERS,
+          round: roundKey,
+          title: closeEnough ? 'VOUCH ✓' : 'VOUCH TEST',
+          subtitle: closeEnough ? 'Trust signal captured locally' : 'Stand beside the hologram',
+          secondsLeft: remaining,
+          matched: 2,
+          targetCount: 2,
+          liveVouches: closeEnough ? 1 : 0,
+          success: true
+        })
+      } else {
+        setJudgeGhost(undefined)
+        setSuccessBurst(false)
+        setState({
+          phase: 'success',
+          playerCount: 2,
+          activePlayers: 2,
+          spectatorCount: 0,
+          requiredPlayers: MIN_SOCIAL_PLAYERS,
+          round: roundKey,
+          title: 'JUDGE LOOP COMPLETE',
+          subtitle: 'Round → Sync → Vouch verified',
+          secondsLeft,
+          matched: 2,
+          targetCount: 2,
+          liveVouches: 1,
+          success: true
+        })
+      }
+      return
+    }
+
+    updateTargets(targets, matched)
+    updateWorldSign(`JUDGE // ${formation.theme}`, formation.title)
+
+    setState({
+      phase: 'active',
+      playerCount: 2,
+      activePlayers: 2,
+      spectatorCount: 0,
+      requiredPlayers: MIN_SOCIAL_PLAYERS,
+      round: roundKey,
+      title: `JUDGE // ${formation.theme}`,
+      subtitle: `${formation.title} · You are one of two lights`,
+      secondsLeft,
+      matched: matched.size,
+      targetCount: 2,
+      liveVouches: 0,
+      success: false
+    })
+
+    if (matched.size === 2) {
+      if (!successSince) successSince = nowSec
+      if (nowSec - successSince >= SUCCESS_HOLD_SECONDS) {
+        lastSuccessRound = roundKey
+        roundCompletedAt = nowSec
+        sessionWins += 1
+        setSuccessBurst(true)
+      }
+    } else {
+      successSince = 0
+      setSuccessBurst(false)
+    }
+    return
+  }
+
+  // Normal solo rehearsal remains available when JUDGE_MODE is disabled.
   if (playerCount === 1) {
+    setJudgeGhost(undefined)
     const trainingTargets: Vec2[] = [{ x: ARENA_CENTER.x, z: ARENA_CENTER.z }]
     const matched = matchPlayersToTargets(allPlayers, trainingTargets, TARGET_RADIUS)
     updateTargets(trainingTargets, matched)
@@ -444,6 +583,7 @@ function gameSystem() {
   }
 
   if (playerCount < MIN_SOCIAL_PLAYERS) {
+    setJudgeGhost(undefined)
     ensureTargetEntities(0)
     updateWorldSign('FIND A FRIEND', '2 PLAYERS UNLOCK THE PUZZLE')
     setState({
@@ -464,6 +604,7 @@ function gameSystem() {
     return
   }
 
+  setJudgeGhost(undefined)
   const formation = formations[deterministicFormationIndex(roundKey)]
   const active = allPlayers.slice(0, activePlayers)
   const targets = worldTargets(formation, activePlayers)

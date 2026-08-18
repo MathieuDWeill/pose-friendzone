@@ -1,6 +1,6 @@
 {
   "name": "pose-decentraland-friendzone",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "description": "POSE \u00d7 Vouch \u2014 anime-inspired social puzzle arena for Decentraland Friendzone.",
   "scripts": {

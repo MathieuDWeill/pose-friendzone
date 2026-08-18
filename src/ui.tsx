@@ -24,7 +24,9 @@ function phaseHint() {
     case 'success':
       return 'SYNC COMPLETE ✓ · Trust captured. Next anime round incoming.'
     default:
-      return 'Move onto the glowing pads. One human per light.'
+      return s.title.startsWith('JUDGE //')
+        ? 'JUDGE MODE · The hologram owns one light. You take the other.'
+        : 'Move onto the glowing pads. One human per light.'
   }
 }
 
